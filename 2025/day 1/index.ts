@@ -31,13 +31,17 @@ function formatSectionHeader(title: string) {
   return `${chalk.cyan(line)}\n${chalk.magenta.bold(formattedTitle)}\n${chalk.cyan(line)}`;
 }
 
-// Load input files
+// Load input files - per part
 const inputDir = path.join(import.meta.dir, "input");
-const testInputPath = path.join(inputDir, "input_test.txt");
-const realInputPath = path.join(inputDir, "input_real.txt");
 
-// Verify input files
-function verifyFile(filePath: string) {
+// Helper function to load input for a specific part
+function getInputPath(partNumber: number): string {
+  const inputType = USETESTINPUT ? "test" : "real";
+  return path.join(inputDir, `input_${inputType}_part${partNumber}.txt`);
+}
+
+// Verify input files exist
+function verifyFile(filePath: string): void {
   try {
     Bun.file(filePath).text();
   } catch {
@@ -45,16 +49,22 @@ function verifyFile(filePath: string) {
     process.exit(1);
   }
 }
-verifyFile(testInputPath);
-verifyFile(realInputPath);
 
-const testInput = await Bun.file(testInputPath).text();
-const realInput = await Bun.file(realInputPath).text();
-const input = USETESTINPUT ? testInput : realInput;
+// Verify all part input files exist before running
+verifyFile(getInputPath(1));
+verifyFile(getInputPath(2));
+verifyFile(getInputPath(3));
 
-// Function to execute and profile a solution
-async function executeSolution(partName: string, solutionFn: (input: string) => unknown, input: string) {
+// Function to execute and profile a solution with per-part input
+async function executeSolution(
+  partNumber: number,
+  partName: string,
+  solutionFn: (input: string) => unknown
+): Promise<void> {
   console.log(formatSectionHeader(partName));
+
+  const inputPath = getInputPath(partNumber);
+  const input = await Bun.file(inputPath).text();
 
   const startTime = performance.now();
   try {
@@ -69,10 +79,10 @@ async function executeSolution(partName: string, solutionFn: (input: string) => 
   }
 }
 
-// Execute parts
-await executeSolution("Part 1", part1, input);
-await executeSolution("Part 2", part2, input);
-await executeSolution("Part 3", part3, input);
+// Execute all parts with their respective inputs
+await executeSolution(1, "Part 1 - Warm Up", part1);
+await executeSolution(2, "Part 2 - Intermediate", part2);
+await executeSolution(3, "Part 3 - Expert", part3);
 
 // Summary
 console.log("\n" + chalk.bold.bgCyan(" ⚡ Quest Complete! ⚡ "));
