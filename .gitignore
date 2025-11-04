@@ -4,6 +4,23 @@ node_modules/
 **/*/input_real.txt
 **/*/input_test.txt
 
+#part files
+**/*/input_real_part1.txt
+**/*/input_real_part2.txt
+**/*/input_real_part3.txt
+
+**/*/input_test_part1.txt
+**/*/input_test_part2.txt
+**/*/input_test_part3.txt
+
 # Don't ignore the template folder and its files
 !template/input/input_real.txt
 !template/input/input_test.txt
+
+!template/input/input_real_part1.txt
+!template/input/input_real_part2.txt
+!template/input/input_real_part3.txt
+
+!template/input/input_test_part1.txt
+!template/input/input_test_part2.txt
+!template/input/input_test_part3.txt
