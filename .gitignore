@@ -1,0 +1,9 @@
+node_modules/
+.vscode/
+
+**/*/input_real.txt
+**/*/input_test.txt
+
+# Don't ignore the template folder and its files
+!template/input/input_real.txt
+!template/input/input_test.txt
